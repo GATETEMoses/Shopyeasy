@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShopEasy – Online Store</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">Shop<span>Easy</span></a>
+      <input id="search" type="search" placeholder="Search products…" aria-label="Search products">
+      <button id="cartBtn" class="cart-btn" aria-label="Open cart">
+        🛒 <span id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Everything you need, delivered.</h1>
+      <p>Quality products at great prices. Free delivery on orders over 50,000.</p>
+      <a href="#shop" class="btn">Shop now</a>
+    </div>
+  </section>
+
+  <main class="container" id="shop">
+    <div class="toolbar">
+      <div id="filters" class="filters"></div>
+      <select id="sort" aria-label="Sort products">
+        <option value="default">Sort: Featured</option>
+        <option value="low">Price: Low to High</option>
+        <option value="high">Price: High to Low</option>
+        <option value="name">Name: A–Z</option>
+      </select>
+    </div>
+    <div id="products" class="grid"></div>
+    <p id="empty" class="empty" hidden>No products found.</p>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> ShopEasy. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <div id="overlay" class="overlay"></div>
+  <aside id="cart" class="cart" aria-label="Shopping cart">
+    <div class="cart-head">
+      <h2>Your Cart</h2>
+      <button id="closeCart" class="icon-btn" aria-label="Close cart">✕</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <div class="total-row"><span>Total</span><strong id="cartTotal">0</strong></div>
+      <button id="checkout" class="btn btn-block">Checkout</button>
+      <button id="clearCart" class="btn-link">Clear cart</button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
