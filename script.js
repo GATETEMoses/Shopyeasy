@@ -1,25 +1,16 @@
 /* ============ CONFIG (customise here) ============ */
+
+
 const CONFIG = {
   currency: "USD",
   locale: "en-EN",
   storageKey: "shopeasy_cart"
 };
 
+let PRODUCTS = [];
 
-const PRODUCTS = [
-  { id: 1,  name: "Wireless Headphones", category: "Electronics", price: 45000, emoji: "🎧", description: "Bluetooth over-ear headphones with deep bass." },
-  { id: 2,  name: "Smart Watch",         category: "Electronics", price: 85000, emoji: "⌚", description: "Track fitness, sleep and notifications." },
-  { id: 3,  name: "Phone Power Bank",    category: "Electronics", price: 22000, emoji: "🔋", description: "10,000mAh fast-charging portable battery." },
-  { id: 4,  name: "Running Shoes",       category: "Fashion",     price: 38000, emoji: "👟", description: "Lightweight, breathable and comfortable." },
-  { id: 5,  name: "Denim Jacket",        category: "Fashion",     price: 32000, emoji: "🧥", description: "Classic fit jacket for every season." },
-  { id: 6,  name: "Backpack",            category: "Fashion",     price: 27000, emoji: "🎒", description: "Water-resistant with laptop compartment." },
-  { id: 7,  name: "Coffee Maker",        category: "Home",        price: 52000, emoji: "☕", description: "Brew fresh coffee in minutes." },
-  { id: 8,  name: "Table Lamp",          category: "Home",        price: 15000, emoji: "💡", description: "Warm LED lamp with adjustable brightness." },
-  { id: 9,  name: "Cooking Pot Set",     category: "Home",        price: 48000, emoji: "🍲", description: "Non-stick 5-piece set for your kitchen." },
-  { id: 10, name: "Yoga Mat",            category: "Sports",      price: 18000, emoji: "🧘", description: "Non-slip, extra thick exercise mat." },
-  { id: 11, name: "Football",            category: "Sports",      price: 12000, emoji: "⚽", description: "Durable size-5 match ball." },
-  { id: 12, name: "Water Bottle",        category: "Sports",      price: 9000,  emoji: "🧴", description: "1L insulated, keeps drinks cold for 24h." }
-];
+
+
 
 /* ============ STATE ============ */
 let cart = loadCart();
@@ -195,18 +186,55 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(
 
 $("#clearCart").addEventListener("click", () => { cart = []; updateCart(); });
 
-$("#checkout").addEventListener("click", () => {
+let pendingCheckout;
+
+$("#checkout").addEventListener("click", async () => {
   if (cart.length === 0) return toast("Your cart is empty");
-  /* TODO: connect to a real payment/back-end here
-     (e.g. MTN MoMo, Stripe, Flutterwave, or your own API). */
-  toast("Order placed! (demo)");
-  cart = [];
-  updateCart();
-  closeCart();
+  const button = $("#checkout");
+  const items = JSON.stringify(cart);
+  if (pendingCheckout?.items !== items) {
+    const randomBytes = crypto.getRandomValues(new Uint8Array(16));
+    const requestId = Array.from(randomBytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+    pendingCheckout = { items, requestId };
+  }
+  button.disabled = true;
+  try {
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requestId: pendingCheckout.requestId, items: JSON.parse(items) })
+    });
+    const receipt = await response.json();
+    if (!response.ok) return toast(receipt.error || "Checkout failed. Try again.");
+    pendingCheckout = undefined;
+    if (JSON.stringify(cart) === items) {
+      cart = [];
+      updateCart();
+      closeCart();
+    }
+    toast("Order placed · " + receipt.id.slice(0, 8));
+  } catch {
+    toast("Could not reach checkout. Try again.");
+  } finally {
+    button.disabled = false;
+  }
 });
 
-/* ============ INIT ============ */
-$("#year").textContent = new Date().getFullYear();
-renderFilters();
-renderProducts();
-updateCart();
+async function initializeStore() {
+  $("#year").textContent = new Date().getFullYear();
+  $("#checkout").disabled = true;
+  try {
+    const response = await fetch("/api/products");
+    if (!response.ok) throw new Error("Catalog request failed");
+    PRODUCTS = await response.json();
+    cart = cart.filter((item) => PRODUCTS.some((product) => product.id === item.id));
+    renderFilters();
+    renderProducts();
+    updateCart();
+    $("#checkout").disabled = false;
+  } catch {
+    $("#products").textContent = "The catalog could not load. Refresh to try again.";
+  }
+}
+
+initializeStore();

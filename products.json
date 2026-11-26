@@ -1,0 +1,122 @@
+[
+    {
+        "id":  1,
+        "name":  "Wireless Headphones",
+        "category":  "Electronics",
+        "price":  45000,
+        "emoji":  "🎧",
+        "description":  "Bluetooth over-ear headphones with deep bass."
+    },
+    {
+        "id":  2,
+        "name":  "Smart Watch",
+        "category":  "Electronics",
+        "price":  85000,
+        "emoji":  "⌚",
+        "description":  "Track fitness, sleep and notifications."
+    },
+    {
+        "id":  3,
+        "name":  "Phone Power Bank",
+        "category":  "Electronics",
+        "price":  22000,
+        "emoji":  "🔋",
+        "description":  "10,000mAh fast-charging portable battery."
+    },
+    {
+        "id":  4,
+        "name":  "Running Shoes",
+        "category":  "Fashion",
+        "price":  38000,
+        "emoji":  "👟",
+        "description":  "Lightweight, breathable and comfortable."
+    },
+    {
+        "id":  5,
+        "name":  "Denim Jacket",
+        "category":  "Fashion",
+        "price":  32000,
+        "emoji":  "🧥",
+        "description":  "Classic fit jacket for every season."
+    },
+    {
+        "id":  6,
+        "name":  "Backpack",
+        "category":  "Fashion",
+        "price":  27000,
+        "emoji":  "🎒",
+        "description":  "Water-resistant with laptop compartment."
+    },
+    {
+        "id":  7,
+        "name":  "Coffee Maker",
+        "category":  "Home",
+        "price":  52000,
+        "emoji":  "☕",
+        "description":  "Brew fresh coffee in minutes."
+    },
+    {
+        "id":  8,
+        "name":  "Table Lamp",
+        "category":  "Home",
+        "price":  15000,
+        "emoji":  "💡",
+        "description":  "Warm LED lamp with adjustable brightness."
+    },
+    {
+        "id":  9,
+        "name":  "Cooking Pot Set",
+        "category":  "Home",
+        "price":  48000,
+        "emoji":  "🍲",
+        "description":  "Non-stick 5-piece set for your kitchen."
+    },
+    {
+        "id":  10,
+        "name":  "Yoga Mat",
+        "category":  "Sports",
+        "price":  18000,
+        "emoji":  "🧘",
+        "description":  "Non-slip, extra thick exercise mat."
+    },
+    {
+        "id":  11,
+        "name":  "Football",
+        "category":  "Sports",
+        "price":  12000,
+        "emoji":  "⚽",
+        "description":  "Durable size-5 match ball."
+    },
+    {
+        "id":  12,
+        "name":  "Water Bottle",
+        "category":  "Sports",
+        "price":  9000,
+        "emoji":  "🧴",
+        "description":  "1L insulated, keeps drinks cold for 24h."
+    },
+    {
+        "id":  13,
+        "name":  "Water Bottle",
+        "category":  "Sports",
+        "price":  9000,
+        "emoji":  "🧴",
+        "description":  "1L insulated, keeps drinks cold for 24h."
+    },
+    {
+        "id":  14,
+        "name":  "Sunglasses",
+        "category":  "Fashion",
+        "price":  14000,
+        "emoji":  "🕶️",
+        "description":  "UV-protected stylish sunglasses."
+    },
+    {
+        "id":  15,
+        "name":  "Laptop Bag",
+        "category":  "Fashion",
+        "price":  30000,
+        "emoji":  "💼",
+        "description":  "Padded bag that fits up to 15-inch laptops."
+    }
+]

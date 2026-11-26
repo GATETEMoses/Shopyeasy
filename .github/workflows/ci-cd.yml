@@ -1,0 +1,60 @@
+name: ShopEasy CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shopeasy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check frontend syntax and Compose configuration
+        run: |
+          node --check script.js
+          docker compose config --quiet
+      - name: Build application image
+        run: docker build --tag "shopeasy:$GITHUB_SHA" .
+      - name: Test the built image
+        run: |
+          docker run --detach --name shopeasy-ci "shopeasy:$GITHUB_SHA"
+          trap 'docker logs shopeasy-ci; docker rm --force shopeasy-ci' EXIT
+          docker exec -i shopeasy-ci python - < ci/smoke.py
+      - name: Save tested image
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: docker save --output shopeasy.tar "shopeasy:$GITHUB_SHA"
+      - name: Upload tested image
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: shopeasy-image
+          path: shopeasy.tar
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: [self-hosted, Windows, shopeasy-minikube]
+    environment: minikube
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: shopeasy-image
+      - name: Deploy tested image to Minikube
+        shell: powershell
+        run: |
+          docker load --input shopeasy.tar
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\ci\deploy-minikube.ps1 -Image "shopeasy:$env:GITHUB_SHA"
